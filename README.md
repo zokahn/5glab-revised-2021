@@ -73,7 +73,7 @@ Everything that is built on top of the virtualization stack is explained in grea
 **<div align="center"><span style="color:red">For the sake of explanation, limited automation is provided</span></div>**
 
 # High Level design
-This design is created with a few ideas in mind. Make best use of 'low power' and 'high power' network and compute resources. This means that some of these components are always on, mostly consumer grade network and low power but spec'd out computers. And also Telco grade switches and 19" bare metal machines with high performance storage controllers, IPMI/idrac and LOTS of memory and disks.
+This design is created with a few ideas in mind. Make best use of 'low power' and 'high power' network and compute resources. This means that some of these components are always on, mostly consumer grade network and low power but spec'd out computers. Only on for doing throughput and configuration tests are Telco grade switches and 19" bare metal machines with high performance storage controllers, IPMI/idrac and LOTS of memory and disks.
 
 Networks are not just routed, they connect via Pfsense. This gives the best possible replication of real world Telecom operator implementations. Not only is there a lot of network seggregation, but all connecting networks are filtered and only intended traffic is whitelisted.
 
