@@ -1,0 +1,72 @@
+NIC=eno1
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$NIC
+TYPE=Ethernet
+BOOTPROTO=none
+NAME=$NIC
+DEVICE=$NIC
+ONBOOT=yes
+MTU=1500
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$NIC.1
+DEVICE=$NIC.1
+BOOTPROTO=none
+ONBOOT=yes
+MTU=1500
+VLAN=yes
+BRIDGE=br0_1
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$NIC.100
+DEVICE=$NIC.100
+BOOTPROTO=none
+ONBOOT=yes
+MTU=1500
+VLAN=yes
+BRIDGE=br1_100
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$NIC.110
+DEVICE=$NIC.110
+BOOTPROTO=none
+ONBOOT=yes
+MTU=1500
+VLAN=yes
+BRIDGE=br2_110
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-br0_1
+DEVICE=br0_1
+TYPE=Bridge
+IPADDR=192.168.2.241
+NETMASK=255.255.255.0
+GATEWAY=192.168.2.254
+DNS1=1.1.1.1
+ONBOOT=yes
+MTU=1500
+BOOTPROTO=static
+DELAY=0
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-br1_100
+DEVICE=br1_100
+TYPE=Bridge
+IPADDR=10.0.10.25
+NETMASK=255.255.255.224
+ONBOOT=yes
+MTU=1500
+BOOTPROTO=static
+DELAY=0
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-br2_110
+DEVICE=br2_110
+TYPE=Bridge
+IPADDR=10.0.11.25
+NETMASK=255.255.255.224
+ONBOOT=yes
+MTU=1500
+BOOTPROTO=none
+DELAY=0
+EOF
