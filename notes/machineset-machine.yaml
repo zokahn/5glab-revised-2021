@@ -1,0 +1,31 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: openshift-q5z25
+      machine.openshift.io/cluster-api-machineset: openshift-q5z25-worker-bm-0
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: openshift-q5z25
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: openshift-q5z25-worker-bm-0
+    spec:
+      metadata: {}
+      providerSpec:
+        value:
+          apiVersion: baremetal.cluster.k8s.io/v1alpha1
+          hostSelector: {}
+          image:
+            checksum: >-
+              http://10.0.10.4:6180/images/rhcos-48.84.202109241901-0-openstack.x86_64.qcow2/cached-rhcos-48.84.202109241901-0-openstack.x86_64.qcow2.md5sum
+            url: >-
+              http://10.0.10.4:6180/images/rhcos-48.84.202109241901-0-openstack.x86_64.qcow2/cached-rhcos-48.84.202109241901-0-openstack.x86_64.qcow2
+          kind: BareMetalMachineProviderSpec
+          metadata:
+            creationTimestamp: null
+          userData:
+            name: worker-user-data
