@@ -98,7 +98,7 @@ Focus is also on installing OpenShift showing the technical steps needed in most
 
 **<div align="center"><span style="color:red">For the sake of explanation, limited automation is provided</span></div>**
 
-# High Level design
+# 3 High Level design
 This design is created with a few ideas in mind. Make best use of 'low power' and 'high power' network and compute resources. This means that some of these components are always on, mostly consumer grade network and low power but spec'd out computers. Only on for doing throughput and configuration tests are Telco grade switches and 19" bare metal machines with high performance storage controllers, IPMI/idrac and LOTS of memory and disks.
 
 Networks are not just routed, they connect via Pfsense. This gives the best possible replication of real world Telecom operator implementations. Not only is there a lot of network segregation, but all connecting networks are filtered and only intended traffic is whitelisted.
@@ -108,3 +108,31 @@ Virtual where we can but physical where needed. When going into the High Through
 In the previous designs from M4r1k there was heavy use of VMware. I aint've time for that ;-) My comfort zone is in Libvirt/KVM, not only running virtual machines but also mangling images and quickly deploying, integration with [Guacamole](http://www.simpletest.nl/wordpress/2021/03/28/rdp-vnc-to-html5-proxy-guacamole/) and my other tools.
 
 <img src="media/k8s_5g_lab_RH-Bart.png" />
+
+# 4 Technical implementation
+
+## 4.1 Meet the hardware
+
+### 4.1.1 Servers
+
+### 4.1.2 Switches
+
+## 4.2 Networks
+
+### 4.2.1 IP planning
+
+# 5 Walk through
+
+## 5.1 RHEL8 OS implementation on NUC and Shuttle
+
+## 5.2 Facility server base installation
+
+## 5.3 Deploying skeleton Virtual Machines and vBMC ipmi
+
+## 5.4 Implementing network requirements
+
+## 5.5 Deploying OpenShift 4 IPI
+
+## 5.6 Adding BM workers
+
+## 5.7 High Throughput networks
