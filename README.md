@@ -121,6 +121,8 @@ In the previous designs from M4r1k there was heavy use of VMware. I aint've time
 | Libvirt host | [Shuttle SH370R8](https://tweakers.net/pricewatch/1320758/shuttle-xpc-cube-sh370r8.html) | i7-9700K | 128Gb | 1Tb nvme SSD |  enp1s0 TRUNK |      |   |
 |      |          |     |     |      |      |      |   |
 
+The Shuttle system is remarkable. It holds 128Gb of normal DDR4 memory modules. Which is still a sizable investment but A LOT of value for money in a quiet, energy efficient system (compared to Dell or HPE rack servers).
+Together with the NVMe drive, the possible addition of a PCIe
 
 ### 4.1.2 Switches
 
@@ -129,9 +131,43 @@ In the previous designs from M4r1k there was heavy use of VMware. I aint've time
 ### 4.2.1 IP planning
 
 # 5 Walk through
+These are the steps to deploy everything that is needed to deploy OpenShift, followed by the OpenShift deployment commands. OpenShift is Open Source software, as i work for Red Hat can work with the subscription based versions. Without too many chances this can be made to work with a CentOS(ish) OS and [OKD](https://www.okd.io/).
 
 ## 5.1 RHEL8 OS implementation on NUC and Shuttle
+The base, minimal installation of RHEL8 should be performed on the two libvirt hosts NUC and Shuttle. The register with subscription manager and activated with the base channels. Then some networking should be arranged to allow VM's to connect via Linux Bridging.
 
+### 5.1.1 Base installation
+The base installation was performed on both machines with a USB thumbdrive as the machines lack remote media options. The following are the resulting kickstart files.
+
+The disk layout is as simple as possible, having most of the disk capacity available via the root / filesystem. This is to have a central directory where the virtual machines are spawned.
+
+[NUC kickstart file](notes/nuc.ks)
+[Shuttle kickstart file](notes/shuttle.ks)
+
+### 5.1.2 Registering and attaching RPM repositories
+
+```
+export USER=<username>
+export PASS=<password>
+subscription-manager register --user $USER --password $PASS  --auto-attach
+
+subscription-manager repos --disable=*
+
+subscription-manager repos --enable=rhel-8-for-x86_64-baseos-rpms --enable=rhel-8-for-x86_64-appstream-rpms
+```
+
+### 5.1.3 Installing updates, libvirt and nice to haves
+
+```
+yum -y update
+systemctl disable --now firewalld
+
+yum -y install libvirt-devel virt-top libguestfs-tools
+systemctl enable --now libvirtd
+
+yum -y install cockpit
+systemctl enable --now cockpit.socket
+```
 ## 5.2 Facility server base installation
 
 ## 5.3 Deploying skeleton Virtual Machines and vBMC ipmi
