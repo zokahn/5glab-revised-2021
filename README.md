@@ -175,7 +175,7 @@ yum -y install vim tmux git
 
 Enable nested virtualization on the host that will run the facility server. The OpenShift installation process will include the creation of a small temporary virtual machine on the facility server. To be able to do this in a VM, nested virtualization needs to be enabled.
 
-See here: (RHEL8 Manual: CREATING NESTED VIRTUAL MACHINES)[https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_virtualization/creating-nested-virtual-machines_configuring-and-managing-virtualization]
+See here: [RHEL8 Manual: CREATING NESTED VIRTUAL MACHINES](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_virtualization/creating-nested-virtual-machines_configuring-and-managing-virtualization)
 
 The machines in my lab have intel CPU's so i do the following, but also include some configuration when the virtual machines is created:
 ```
