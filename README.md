@@ -142,6 +142,7 @@ The base installation was performed on both machines with a USB thumbdrive as th
 The disk layout is as simple as possible, having most of the disk capacity available via the root / filesystem. This is to have a central directory where the virtual machines are spawned.
 
 [NUC kickstart file](notes/nuc.ks)
+
 [Shuttle kickstart file](notes/shuttle.ks)
 
 ### 5.1.2 Registering and attaching RPM repositories
