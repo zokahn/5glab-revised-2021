@@ -157,6 +157,7 @@ subscription-manager repos --enable=rhel-8-for-x86_64-baseos-rpms --enable=rhel-
 ```
 
 ### 5.1.3 Installing updates, libvirt and nice to haves
+On both NUC and Shuttle do the following to install what is needed.
 
 ```
 yum -y update
@@ -167,7 +168,37 @@ systemctl enable --now libvirtd
 
 yum -y install cockpit
 systemctl enable --now cockpit.socket
+
+yum -y install vim tmux git
 ```
+
+Enable nested virtualization on the host that will run the facility server. The OpenShift installation process will include the creation of a small temporary virtual machine on the facility server. To be able to do this in a VM, nested virtualization needs to be enabled.
+
+See here: (RHEL8 Manual: CREATING NESTED VIRTUAL MACHINES)[https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_virtualization/creating-nested-virtual-machines_configuring-and-managing-virtualization]
+
+The machines in my lab have intel CPU's so i do the following, but also include some configuration when the virtual machines is created:
+```
+echo "options kvm_intel nested=1" >>  /etc/modprobe.d/kvm.conf
+```
+
+With all the updates it is best to reboot and activate the changes.
+
+```
+reboot
+```
+### 5.1.4 Create a place to run scripts and create VM's
+
+```
+mkdir -p /local/git /local/vms
+cd /local/git
+git clone https://github.com/zokahn/5glab-revised-2021.git
+
+```
+
+
+
+
+
 ## 5.2 Facility server base installation
 
 ## 5.3 Deploying skeleton Virtual Machines and vBMC ipmi
