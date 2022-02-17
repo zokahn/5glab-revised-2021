@@ -115,6 +115,13 @@ In the previous designs from M4r1k there was heavy use of VMware. I aint've time
 
 ### 4.1.1 Servers
 
+| Role | Hardware | CPU | Mem | Disk | NIC1 | NIC2 |   |
+|------|----------|-----|-----|------|------|------|---|
+| Libvirt host | [Intel NUC NUC7i5BNK](https://ark.intel.com/content/www/us/en/ark/products/95061/intel-nuc-kit-nuc7i5bnk.html) | i5-7260U | 32Gb | 1Tb nvme SSD | eno1 TRUNK |      |   |
+| Libvirt host | [Shuttle SH370R8](https://tweakers.net/pricewatch/1320758/shuttle-xpc-cube-sh370r8.html) | i7-9700K | 128Gb | 1Tb nvme SSD |  enp1s0 TRUNK |      |   |
+|      |          |     |     |      |      |      |   |
+
+
 ### 4.1.2 Switches
 
 ## 4.2 Networks
