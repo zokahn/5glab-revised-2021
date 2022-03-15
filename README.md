@@ -291,6 +291,21 @@ DELAY=0
 EOF
 ```
 
+### 5.1.6 RHEL8 qcow2 image
+To deploy the virtual machine that will act as the facility server and the optional test node we will need the RHEL8 or CentOS8 qcow2 iso image, download this here: [Access portal to RHEL8 image](https://access.redhat.com/downloads/content/479/ver=/rhel---8/8.5/x86_64/product-software)
+
+Download the "Red Hat Enterprise Linux 8.* Update KVM Guest Image" where * could be the latest version.
+
+You will need a subscription, this could be a free developer sub! [Get free access to Red Hat software using the developer subscription](https://developers.redhat.com/articles/getting-red-hat-developer-subscription-what-rhel-users-need-know#get_the_software)
+
+Once downloaded, make sure the image exists in /var/lib/libvirt/images
+
+On NUC (and later also Shuttle)
+```
+cp rhel-8.4-x86_64-kvm.qcow2 /var/lib/libvirt/images
+```
+
+
 ## 5.2 Facility server base installation
 This paragraph explains the deployment of the facility node. In OpenShift terms also referenced as the bastion host or sometimes tooling server. On this node we will enable more abilities, more then just a bastion host that acts like a stepping stone to other servers.
 
@@ -300,9 +315,16 @@ This paragraph explains the deployment of the facility node. In OpenShift terms 
 - Optional: run a webserver containing cached or changed CoreOS images.
 - Optional: run a container registry containing the OCP4 base and marketplace images.
 
-To deploy the virtual machine that will act as the facility server we will need the RHEL8 or CentOS8 qcow2 iso image, download this here: [Access portal to RHEL8 image](https://access.redhat.com/downloads/content/479/ver=/rhel---8/8.5/x86_64/product-software)
+### 5.2.1 What we need before we start
+Make sure the following points are implemented to be able to run the 'create_facility.sh':
+- Network is implemented on NUC:
+  - VLAN1, VLAN100, VLAN110 as subinterfaces
+  - br0_1, br1_100, br2_110 as bridges with IP in their respective IP lan
+- The RHEL8 qcow image is downloaded and placed in /var/lib/libvirt/images
+- The create_facility.sh script (from this repository)
 
-You will need a subscription, this could be a free developer sub! [Get free access to Red Hat software using the developer subscription](https://developers.redhat.com/articles/getting-red-hat-developer-subscription-what-rhel-users-need-know#get_the_software)
+
+
 
 
 ## 5.3 Deploying skeleton Virtual Machines and vBMC ipmi

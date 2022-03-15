@@ -31,7 +31,6 @@ MTU=1500
 BRIDGE=baremetal
 EOF
 
-
 cat > /tmp/ifcfg-baremetal << EOF
 DEVICE=baremetal
 TYPE=Bridge
@@ -59,7 +58,7 @@ EOF
 
 virt-customize -a $NODE_NAME.qcow2 \
   --hostname $NODE_NAME \
-  --root-password password:r3dh4t1! \
+  --root-password password:$PASSWORD_FOR_VMS \
   --uninstall cloud-init \
   --copy-in /tmp/ifcfg-eth0:/etc/sysconfig/network-scripts/ \
   --copy-in /tmp/ifcfg-eth1:/etc/sysconfig/network-scripts/ \
