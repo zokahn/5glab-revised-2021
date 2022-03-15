@@ -1,9 +1,6 @@
 #!/bin/bash
 VIRT_DIR=/var/lib/libvirt/images
 
-VIRT_DOMAIN='simpletest.nl'
-
-
 nodes="master0 master1 master2"
 NUM=1
 for node in $nodes; do
