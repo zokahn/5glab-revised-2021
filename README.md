@@ -323,13 +323,71 @@ Make sure the following points are implemented to be able to run the 'create_fac
 - The RHEL8 qcow image is downloaded and placed in /var/lib/libvirt/images
 - The create_facility.sh script (from this repository)
 
+### 5.2.2 Check and run the script
+Check the script to make sure the variables are set as needed for your implementation, especially watch:
 
+```
+NODE_NAME=facility
+IMAGES_DIR=/var/lib/libvirt/images
+VIRT_DIR=/var/lib/libvirt/images
+OFFICIAL_IMAGE=rhel-8.4-x86_64-kvm.qcow2
+PASSWORD_FOR_VMS='r3dh4t1!'
+```
+Also check the network configuration in the section:
+- ifcfg-baremetal
+- ifcfg-provisioning
 
+```
+sudo scripts/create_facility.sh
+```
 
+### 5.2.3 The script explained
+The script will take the RHEL8 qcow2 images, deploy it into a empty disk image, sizing it to the needed capacity. The image is then changed to include the network files, the correct timezone, hostname and that selinux labels are reset on first run.
+Virt-install is used to implement the virtual machine in the local libvirtd installation. Adding the correct flags to have nested virtualisation, the correct CPU/MEM, disk and network devices.
+
+This script can be rerun to create a new facility node, overwriting the old disk image. This can be handy when you need a radical new start. You can also use this script as a template to start other nodes in the future. Like the test node.
 
 ## 5.3 Deploying skeleton Virtual Machines and vBMC ipmi
+On the shuttle we need to run the script to create the 3 OpenShift masters and 3 workers as virtual machines. We then connect those libvirt virtual machines to the vBMC IPMI controller.
+The virtual machines have a disk, which remain empty and we configure the network devices. The installation of their OS will be the result of PXE boot and the OpenShift IPI. That is why we don't need the RHEL8 image.
+
+### 5.3.1 What we need before we start
+Make sure the following points are implemented to be able to run the 'create_facility.sh':
+- Network is implemented on Shuttle:
+  - VLAN1, VLAN100, VLAN110 as subinterfaces
+  - br0_1, br1_100, br2_110 as bridges with IP in their respective IP lan
+- The create-ocp-vm-skeleton.sh script (from this repository)
+- The vbmc-to-dom.sh script (from this repository)
+
+### 5.3.2 Check and run the script
+Make sure to check the directory you want the virtual machines to live in. The default is most likely correct. Also check the MAC addressing and CPU/Memory allocation. The memory should not exceed the hosts physical memory, but it should also be enough to meet the OpenShift master and worker minimal requirements.
+The disksize is 6 x 70Gb disks, 420Gb in total in /var/lib/libvirt/images
+
+See here for the minimal requirements: [OpenShift node requirements](https://docs.openshift.com/container-platform/4.10/installing/installing_platform_agnostic/installing-platform-agnostic.html#installation-minimum-resource-requirements_installing-platform-agnostic)
+
+on the shuttle machine
+```
+sudo scripts/create-ocp-vm-skeleton.sh
+```
 
 ## 5.4 Implementing network requirements
+To be able to deploy OpenShift via IPI, using IPMI we need at least the following:
+- Baremetal network
+  - DHCP enabled
+  - Master and worker nodes receive their IP statically
+  - Name resolution for the master and worker nodes
+- Provisioning network
+  - No DHCP
+  - The temporary provisioning VM will take care of DHCP, PXE etc.
+
+In the script dnsmasq.sh are all these requirements implemented. When running this script dnsmasq will be configured to assign IPs based on MAC, valid for the machines deployed with the skeleton script.
+
+These requirements could also be implemented on external facilities. In my case i have PFsense as a router which is very capable to host DHCP services and i have external party hosting my DNS domain simpletest.nl.
+
+```
+sudo script/dnsmasq.sh
+```
+
 
 ## 5.5 Deploying OpenShift 4 IPI
 
