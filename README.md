@@ -160,6 +160,12 @@ subscription-manager repos --enable=rhel-8-for-x86_64-baseos-rpms --enable=rhel-
 ### 5.1.3 Installing updates, libvirt and nice to haves
 On both NUC and Shuttle do the following to install what is needed.
 
+Firewalld is stopped and disabled to make sure there is no interference with some older lingering firewall rules. This lab is not very security focused. We don't protect the libvirt hosts from outside traffic.
+
+Libvirt is installed with Cockpit to give easy access and overview to virtual machines via the RHEL8 Webmanager. Libguestfs is needed to mangle the qcow2 rhel8 image to insert packages, network config, etc.
+
+Vim, tmux and git are needed because i am used to work with them. Git is a easy way to transfer this code repository to the machines.
+
 ```
 yum -y update
 systemctl disable --now firewalld
@@ -196,7 +202,88 @@ git clone https://github.com/zokahn/5glab-revised-2021.git
 
 ```
 
+### 5.1.5 Network bridges
+With the copy 'n paste script we have a easy way to deploy the network changes we need to be able to run virtual machines, connected to VLAN 1, VLAN 100 and VLAN110.
+We need to give the libvirt hosts a fixed ip to be able to reach them easily.
+This can also be changed to run on DHCP with long lease times or even tag the MAC address in the DHCP server to fix the address this way.
+In this design i have a PFsense box, which has that capability. I also include a DNSMasq configuration, but this will come later in the installation process.
 
+```
+NIC=enp1s0
+MTU=1500
+IP_VLAN1=192.168.2.241
+IP_VLAN100=
+IP_VLAN110=
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$NIC
+TYPE=Ethernet
+BOOTPROTO=none
+NAME=$NIC
+DEVICE=$NIC
+ONBOOT=yes
+MTU=$MTU
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$NIC.1
+DEVICE=$NIC.1
+BOOTPROTO=none
+ONBOOT=yes
+MTU=$MTU
+VLAN=yes
+BRIDGE=br0_1
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$NIC.100
+DEVICE=$NIC.100
+BOOTPROTO=none
+ONBOOT=yes
+MTU=$MTU
+VLAN=yes
+BRIDGE=br1_100
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$NIC.110
+DEVICE=$NIC.110
+BOOTPROTO=none
+ONBOOT=yes
+MTU=$MTU
+VLAN=yes
+BRIDGE=br2_110
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-br0_1
+DEVICE=br0_1
+TYPE=Bridge
+IPADDR=$IP_192
+NETMASK=255.255.255.0
+GATEWAY=192.168.2.254
+DNS1=8.8.8.8
+ONBOOT=yes
+MTU=$MTU
+BOOTPROTO=static
+DELAY=0
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-br1_100
+DEVICE=br1_100
+TYPE=Bridge
+IPADDR=172.20.0.113
+NETMASK=255.255.255.0
+ONBOOT=yes
+MTU=$MTU
+BOOTPROTO=static
+DELAY=0
+EOF
+
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-br2_110
+DEVICE=br2_110
+TYPE=Bridge
+ONBOOT=yes
+MTU=$MTU
+BOOTPROTO=none
+DELAY=0
+EOF
+```
 
 
 
