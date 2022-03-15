@@ -1,0 +1,89 @@
+apiVersion: v1
+baseDomain: simpletest.nl
+metadata:
+  name: openshift
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineCIDR: 10.0.11.0/27
+  serviceNetwork:
+  - 172.30.0.0/16
+  networkType: OVNKubernetes
+compute:
+- name: worker
+  replicas: 3
+controlPlane:
+  name: master
+  replicas: 3
+  platform:
+    baremetal: {}
+platform:
+  baremetal:
+    apiVIP: 10.0.11.18
+    ingressVIP: 10.0.11.19
+    provisioningBridge: provisioning
+    provisioningNetworkInterface: enp1s0
+    provisioningNetworkCIDR: 10.0.10.0/27
+    provisioningDHCPRange: 10.0.10.5,10.0.10.17
+    externalBridge: baremetal
+    bootstrapProvisioningIP: 10.0.10.3
+    clusterProvisioningIP: 10.0.10.4
+    hosts:
+      - name: openshift-master-0
+        role: master
+        bmc:
+          address: ipmi://192.168.2.242:6230
+          username: admin
+          password: Wond3rfulWorld
+        bootMACAddress: 52:54:00:15:bd:2f
+        rootDeviceHints:
+          deviceName: "/dev/vda"
+      - name: openshift-master-1
+        role: master
+        bmc:
+          address: ipmi://192.168.2.242:6231
+          username: admin
+          password: Wond3rfulWorld
+        bootMACAddress: 52:54:00:25:bd:2f
+        rootDeviceHints:
+          deviceName: "/dev/vda"
+      - name: openshift-master-2
+        role: master
+        bmc:
+          address: ipmi://192.168.2.242:6232
+          username: admin
+          password: Wond3rfulWorld
+        bootMACAddress: 52:54:00:35:bd:2f
+        rootDeviceHints:
+          deviceName: "/dev/vda"
+      - name: openshift-worker-0
+        role: worker
+        bmc:
+          address: ipmi://192.168.2.242:6233
+          username: admin
+          password: Wond3rfulWorld
+        bootMACAddress: 52:54:00:45:bd:2f
+        rootDeviceHints:
+          deviceName: "/dev/vda"
+      - name: openshift-worker-1
+        role: worker
+        bmc:
+          address: ipmi://192.168.2.242:6234
+          username: admin
+          password: Wond3rfulWorld
+        bootMACAddress: 52:54:00:55:bd:2f
+        rootDeviceHints:
+          deviceName: "/dev/vda"
+      - name: openshift-worker-2
+        role: worker
+        bmc:
+          address: ipmi://192.168.2.242:6235
+          username: admin
+          password: Wond3rfulWorld
+        bootMACAddress: 52:54:00:65:bd:2f
+        rootDeviceHints:
+          deviceName: "/dev/vda"
+fips: false
+pullSecret: <pull-secret>
+sshKey: '<ssh-key>'
