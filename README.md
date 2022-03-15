@@ -208,6 +208,12 @@ We need to give the libvirt hosts a fixed ip to be able to reach them easily.
 This can also be changed to run on DHCP with long lease times or even tag the MAC address in the DHCP server to fix the address this way.
 In this design i have a PFsense box, which has that capability. I also include a DNSMasq configuration, but this will come later in the installation process.
 
+The network configuration is shared between the NUC and the Shuttle host. The code below can be run on both nodes to create the VLAN subinterfaces and the bridges allowing the virtual machines to connect their vNIC's.
+
+Make sure you upfate the NIC to the physical nic that has the VLAN configured on the switch.
+Make sure you update the IP for VLAN1 for the appropriate node.
+
+
 ```
 NIC=enp1s0
 MTU=1500
@@ -285,9 +291,19 @@ DELAY=0
 EOF
 ```
 
-
-
 ## 5.2 Facility server base installation
+This paragraph explains the deployment of the facility node. In OpenShift terms also referenced as the bastion host or sometimes tooling server. On this node we will enable more abilities, more then just a bastion host that acts like a stepping stone to other servers.
+
+- Running the temporary provisioner virtual machine.
+- Have a place to run commands with the oc and openshift-baremetal-install binaries
+- Have a place to keep the deployed configuration rerun the installation
+- Optional: run a webserver containing cached or changed CoreOS images.
+- Optional: run a container registry containing the OCP4 base and marketplace images.
+
+To deploy the virtual machine that will act as the facility server we will need the RHEL8 or CentOS8 qcow2 iso image, download this here: [Access portal to RHEL8 image](https://access.redhat.com/downloads/content/479/ver=/rhel---8/8.5/x86_64/product-software)
+
+You will need a subscription, this could be a free developer sub! [Get free access to Red Hat software using the developer subscription](https://developers.redhat.com/articles/getting-red-hat-developer-subscription-what-rhel-users-need-know#get_the_software)
+
 
 ## 5.3 Deploying skeleton Virtual Machines and vBMC ipmi
 
